@@ -1,0 +1,591 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naveen DK Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="Navi.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/init.min.js"></script>
+
+  <style>
+    .google-premium-card {
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease-in-out;
+    }
+    .google-premium-card:hover {
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+    .google-dark-panel {
+      background: #121212;
+      border: 1px solid #1f1f1f;
+    }
+    .google-dark-card {
+      background: #1e1e1e;
+      border: 1px solid #2d2d2d;
+      transition: all 0.2s ease-in-out;
+    }
+    .google-dark-card:hover {
+      border-color: #4285F4;
+      background: #22252a;
+    }
+    .mono-text {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="bg-slate-50">
+  <div id="root"></div>
+<script type="text/babel">
+      const { useState, useEffect } = React;
+
+      // --- Navigation Header ---
+      const Navbar = ({ onConnectClick }) => {
+        return (
+          <header className="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-100 shadow-sm">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex gap-1 items-center">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#4285F4]"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#EA4335]"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#FBBC05]"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#34A853]"></span>
+                </div>
+                <span className="text-xl font-medium tracking-tight text-gray-500">
+                  <strong className="text-gray-950 font-semibold tracking-tight">Naveen DK</strong>
+                </span>
+              </div>
+              <nav className="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-medium text-gray-600 flex-wrap justify-center sm:justify-end">
+                <a href="#summary" className="px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-gray-100 transition">Overview</a>
+                <a href="#skills" className="px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-gray-100 transition">Skills</a>
+                <a href="#experience" className="px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-gray-100 transition">Experience</a>
+                <a href="#projects" className="px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-gray-100 transition">Projects</a>
+                <a href="#cloud-badges" className="px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-gray-100 transition">Badges</a>
+                <a href="#education" className="px-2.5 sm:px-3 py-1.5 rounded-full hover:bg-gray-100 transition">Education</a>
+                <button onClick={onConnectClick} className="ml-2 sm:ml-3 bg-[#4285F4] text-white px-4 sm:px-5 py-2 rounded-full font-medium hover:bg-[#1a73e8] transition shadow-sm hover:shadow-md">Connect</button>
+              </nav>
+            </div>
+          </header>
+        );
+      };
+
+      // --- Technical Skills Card Component ---
+      const SkillCard = ({ icon, title, items, badgeColor, iconColor }) => {
+        return (
+          <div className="rounded-2xl p-6 google-premium-card">
+            <div className="flex items-center gap-3 text-gray-900 text-lg font-medium mb-4">
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${badgeColor} ${iconColor}`}>
+                <i className={icon}></i>
+              </div>
+              <span className="font-semibold tracking-tight">{title}</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {items.map((item, idx) => (
+                <span key={idx} className="bg-gray-50/90 text-gray-700 text-xs px-3 py-2 rounded-xl font-medium border border-gray-200/40">
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+        );
+      };
+
+      // --- Professional Experience Component ---
+      const ExpCard = ({ title, company, duration, location, bullets, sideIndicatorColor }) => {
+        return (
+          <div className="bg-white rounded-2xl p-6 google-premium-card relative overflow-hidden">
+            <div className={`absolute top-0 left-0 w-1.5 h-full ${sideIndicatorColor}`}></div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2 pl-2">
+              <h3 className="text-xl font-bold text-gray-900 tracking-tight">{title}</h3>
+              <span className="text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200/60 px-3 py-1 rounded-full self-start sm:self-auto tracking-wider mono-text">{duration}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm font-medium text-gray-400 mb-4 pl-2">
+              <span className="text-gray-800 font-semibold">{company}</span>
+              <span>•</span>
+              <span>{location}</span>
+            </div>
+            <ul className="text-sm text-gray-600 space-y-2.5 pl-3">
+              {bullets.map((bullet, idx) => (
+                <li key={idx} className="flex items-start gap-3">
+                  <span className="text-gray-300 mt-1.5 text-[8px]">●</span>
+                  <span className="leading-relaxed">{bullet}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      };
+
+      // --- Key Projects Component ---
+      const ProjectCard = ({ title, date, desc, tags, link, headerGrad }) => {
+        return (
+          <div className="bg-white rounded-2xl p-6 flex flex-col justify-between google-premium-card relative overflow-hidden h-full">
+            <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${headerGrad}`}></div>
+            <div>
+              <div className="flex items-start justify-between gap-4 mb-2.5">
+                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 tracking-tight">
+                  {title}
+                  {link && link !== "" && (
+                    <a href={link} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#4285F4] transition text-sm">
+                      <i className="fab fa-github"></i>
+                    </a>
+                  )}
+                </h3>
+                <span className="text-xs font-medium text-gray-400 bg-gray-50/50 border border-gray-100 px-2.5 py-0.5 rounded-md flex-shrink-0 mono-text">{date}</span>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed mb-5 font-normal">{desc}</p>
+            </div>
+            <div className="flex flex-wrap gap-1.5 pt-2">
+              {tags.map((tag, idx) => (
+                <span key={idx} className="text-xs bg-gray-50 text-gray-500 px-2.5 py-1 rounded-md border border-gray-200/60 font-medium tracking-tight">{tag}</span>
+              ))}
+            </div>
+          </div>
+        );
+      };
+
+      // --- Main Core Renderer ---
+      const App = () => {
+        const [imgSrc, setImgSrc] = useState("Navi.png");
+        const [activeBadgeTab, setActiveBadgeTab] = useState("All");
+        const [isModalOpen, setIsModalOpen] = useState(false);
+        const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+        const [isSending, setIsSending] = useState(false);
+
+        // Replace these placeholder strings with your keys from emailjs.com dashboard
+        const EMAILJS_PUBLIC_KEY = "YOUR_EMAILJS_PUBLIC_KEY";
+        const EMAILJS_SERVICE_ID = "YOUR_EMAILJS_SERVICE_ID";
+        const EMAILJS_TEMPLATE_ID = "YOUR_EMAILJS_TEMPLATE_ID";
+
+        useEffect(() => {
+          if (EMAILJS_PUBLIC_KEY !== "YOUR_EMAILJS_PUBLIC_KEY") {
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+          }
+        }, []);
+
+        const handleEmailAutomation = async (e) => {
+          e.preventDefault();
+          if (EMAILJS_PUBLIC_KEY === "YOUR_EMAILJS_PUBLIC_KEY") {
+            alert("Email Automation Setup Required:\nTo activate, create a free account at emailjs.com and insert your generated API tracking credentials at the top of the App component structure!");
+            setIsModalOpen(false);
+            return;
+          }
+
+          setIsSending(true);
+          try {
+            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+              visitor_name: formData.name,
+              visitor_email: formData.email,
+              visitor_message: formData.message
+            });
+            alert(`Thanks for reaching out, ${formData.name}! A confirmation note has been dispatched to ${formData.email}.`);
+            setFormData({ name: '', email: '', message: '' });
+            setIsModalOpen(false);
+          } catch (err) {
+            console.error("Automation pipeline breakdown:", err);
+            alert("Failed to send submission. Check console configuration metrics.");
+          } finally {
+            setIsSending(false);
+          }
+        };
+
+        const skillsData = [
+          { icon: "fa-solid fa-code-branch", title: "Languages", items: ['Java', 'C++', 'Python', 'JavaScript (Node.js, React)', 'SQL'], badgeColor: "bg-blue-50", iconColor: "text-[#4285F4]" },
+          { icon: "fa-solid fa-laptop-code", title: "CS Fundamentals", items: ['DSA', 'OOP', 'System Design', 'Operating Systems', 'DBMS', 'Computer Networks'], badgeColor: "bg-red-50", iconColor: "text-[#EA4335]" },
+          { icon: "fa-solid fa-cloud", title: "Cloud & DevOps", items: ['GCP', 'Firebase', 'Docker', 'CI/CD Pipelines', 'Git', 'GitHub Actions'], badgeColor: "bg-amber-50", iconColor: "text-[#FBBC05]" },
+          { icon: "fa-solid fa-server", title: "Backend & Full Stack", items: ['RESTful APIs', 'Microservices', 'MySQL', 'NoSQL', 'ETL Pipelines', 'Flask'], badgeColor: "bg-green-50", iconColor: "text-[#34A853]" }
+        ];
+
+        const experienceData = [
+          {
+            title: "Software Engineer Intern",
+            company: "HackerRank",
+            duration: "Dec 2024 – Feb 2025",
+            location: "Remote",
+            sideIndicatorColor: "bg-[#4285F4]",
+            bullets: [
+              "Designed and developed highly efficient RESTful APIs for internal tools serving over 500+ active concurrent users with low latency execution.",
+              "Applied advanced data structures and algorithmic optimization to resolve backend performance bottlenecks, reducing response times.",
+              "Collaborated within an Agile/Scrum lifecycle framework, participating in technical code reviews, CI/CD automation, and robust Git workflows."
+            ]
+          },
+          {
+            title: "Machine Learning Engineer Intern",
+            company: "Rinex Technology",
+            duration: "Jan 2025 – Mar 2025",
+            location: "Remote",
+            sideIndicatorColor: "bg-[#EA4335]",
+            bullets: [
+              "Engineered automated ETL data pipelines to efficiently process, clean, and validate 50,000+ complex raw transactional records.",
+              "Tuned and deployed custom TensorFlow machine learning models into production architectures, achieving a verified 94% prediction accuracy."
+            ]
+          },
+          {
+            title: "Data Science & Software Intern",
+            company: "US Salem Startup",
+            duration: "Jan 2023 – Jun 2023",
+            location: "Salem, India",
+            sideIndicatorColor: "bg-[#34A853]",
+            bullets: [
+              "Performed large-scale exploratory data analysis on 10,000+ data points to extract key technical trends and predictive customer patterns.",
+              "Translated abstract business requirements into highly scalable, data-driven machine learning models and pipeline logic."
+            ]
+          }
+        ];
+
+        const projectsData = [
+          {
+            title: "AIGuard LLM Firewall Application",
+            date: "June 2026",
+            desc: "Architected a real-time semantic security gateway and firewall middleware sitting between client apps and LLMs to detect/neutralize prompt injections and jailbreak attempts. Integrated a robust Data Loss Prevention (DLP) layer to redact PII and business secrets from model responses.",
+            tags: ['React', 'Node.js', 'Python', 'Express', 'Security Middleware', 'DLP'],
+            link: "https://github.com/Naveen-dk/AIGuard-LLM-Firewall-application",
+            headerGrad: "from-blue-500 to-indigo-500"
+          },
+          {
+            title: "Luxe Mart E-Commerce Platform",
+            date: "Nov 2023",
+            desc: "Developed a full-stack e-commerce architecture utilizing secure JWT-based stateless user authentication, session tokens, and structurally optimized RESTful API route querying.",
+            tags: ['React', 'Node.js', 'MySQL', 'JWT Authentication'],
+            link: "https://github.com/Naveen-dk/LuxeMart-",
+            headerGrad: "from-red-500 to-pink-500"
+          },
+          {
+            title: "Aether Mail Email System",
+            date: "Oct 2023",
+            desc: "Engineered a fault-tolerant mailing engine with heavy database index optimizations, lowering querying bottlenecks and achieving 60% lower latency for concurrent operational flows.",
+            tags: ['Flask', 'MySQL', 'React', 'Distributed Systems'],
+            link: "https://github.com/Naveen-dk/Email-system-",
+            headerGrad: "from-amber-500 to-orange-500"
+          },
+          {
+            title: "Fractal Mariner Fintech App",
+            date: "Aug 2023",
+            desc: "Built a secure cross-platform mobile fintech wallet integrating OAuth 2.0 identity flows, isolated transactional logic, and multi-region GCP instances to maintain a 99.9% application uptime.",
+            tags: ['Flutter', 'Firebase', 'GCP', 'OAuth 2.0'],
+            link: "",
+            headerGrad: "from-green-500 to-emerald-500"
+          },
+          {
+            title: "CloudGateway",
+            date: "April 2026",
+            desc: "Full-stack GCP console featuring real-time VM and storage management via APIs, secured by Node.js/OAuth, Role-Based Access Control (RBAC), and integrated live monitoring for CPU and billing metrics.",
+            tags: ['Node.js', 'GCP', 'OAuth', 'RBAC', 'Cloud APIs'],
+            link: "https://github.com/Naveen-dk/CloudGateway",
+            headerGrad: "from-blue-500 to-cyan-500"
+          }
+        ];
+
+        const skillBadgesData = [
+  { name: "Deploy and Scale AI Models with Cloud Run", date: "Feb 24, 2026", cat: "Vertex AI", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/22175973" },
+  { name: "Transformer Models and BERT Model", date: "Feb 11, 2026", cat: "AI Models", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/20383613" },
+  { name: "Introduction to Data Analytics in Google Cloud", date: "Nov 20, 2025", cat: "Data", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/19787348" },
+  { name: "Build a Certification Study Guide: PMLE", date: "Oct 30, 2025", cat: "Featured", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/18108696" },
+  { name: "Model Armor: Securing AI Deployments", date: "Oct 4, 2025", cat: "Security", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/17740647" },
+  { name: "Google Cloud: Prompt Engineering Guide", date: "Sep 6, 2025", cat: "Prompt design", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/17369092" },
+  { name: "Gemini for DevOps Engineers", date: "Aug 22, 2025", cat: "Gemini", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/17339580" },
+  { name: "Gemini for Network Engineers", date: "Aug 7, 2025", cat: "Gemini", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/17228276" },
+  { name: "Gemini for Application Developers", date: "Aug 6, 2025", cat: "Gemini", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/17204350" },
+  { name: "Streamline App Development with Gemini Code Assist", date: "Jul 31, 2025", cat: "Gemini", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/17061031" },
+  { name: "Gemini for Security Engineers", date: "Jul 30, 2025", cat: "Gemini", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/17035466" },
+  { name: "Gemini for Data Scientists and Analysts", date: "Jul 22, 2025", cat: "Gemini", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/16909285" },
+  { name: "Gemini for end-to-end SDLC", date: "Jul 20, 2025", cat: "Gemini", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/16867193" },
+  { name: "Gemini for Cloud Architects", date: "Jul 11, 2025", cat: "Gemini", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/16841687" },
+  { name: "Google Cloud Computing Foundations: Fundamentals", date: "Jul 7, 2025", cat: "Featured", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/16826612" },
+  { name: "Introduction to Security in the World of AI", date: "Jul 5, 2025", cat: "Security", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/16737994" },
+  { name: "Introduction to Data Analytics in Google Cloud", date: "Jul 3, 2025", cat: "Data", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/16729979" },
+  { name: "MLOps with Vertex AI: Model Evaluation", date: "Jun 27, 2025", cat: "Vertex AI", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/16695837" },
+  { name: "Prompt Design in Agent Platform", date: "Jun 26, 2025", cat: "Prompt design", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/9481621" },
+  { name: "Machine Learning Operations (MLOps) for GenAI", date: "Jun 25, 2025", cat: "Vertex AI", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/9479507" },
+  { name: "Responsible AI: Applying AI Principles", date: "Jun 17, 2024", cat: "AI Models", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/9479341" },
+  { name: "Introduction to Responsible AI", date: "Jun 17, 2024", cat: "AI Models", link: "https://www.skills.google/public_profiles/30a8d049-ff2a-4513-97eb-31aa4f57fc26/badges/9449888" },
+  { name: "Introduction to Large Language Models", date: "Jun 17, 2024", cat: "AI Models", link: "https://www.skills.google/profile/stay_on_track" },
+  { name: "Introduction to Generative AI", date: "Jun 14, 2024", cat: "AI Models", link: "https://www.skills.google/profile/stay_on_track" }
+];
+
+        const filteredBadges = activeBadgeTab === "All" 
+          ? skillBadgesData 
+          : skillBadgesData.filter(b => b.cat.toLowerCase() === activeBadgeTab.toLowerCase());
+
+        return (
+          <div>
+            <Navbar onConnectClick={() => setIsModalOpen(true)} />
+            
+            <main className="max-w-5xl mx-auto px-4 sm:px-6 pt-28 sm:pt-36 pb-24 space-y-20 sm:space-y-24">
+
+              {/* ===== HERO SECTION ===== */}
+              <section id="summary" className="flex flex-col-reverse md:flex-row items-center md:items-start justify-between gap-12 pt-4">
+                <div className="flex-1 space-y-6 text-center md:text-left">
+                  <div className="inline-flex items-center gap-2 bg-blue-50/60 text-[#1a73e8] text-xs font-semibold px-4 py-1.5 rounded-full border border-blue-100/40">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#4285F4] animate-ping"></span>
+                    Available for Full Stack & Software Engineering Roles
+                  </div>
+                  <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 leading-none">
+                    Naveen DK
+                  </h1>
+                  <h2 className="text-xl md:text-2xl font-medium bg-gradient-to-r from-blue-600 via-red-500 to-green-600 bg-clip-text text-transparent font-sans mt-2">
+                    Full Stack Developer & Software Engineer
+                  </h2>
+                  <p className="text-base text-gray-500 max-w-2xl leading-relaxed font-normal">
+                    Full Stack Software Engineer specializing in high-scalability backend architectures, data pipelines, and intelligent cloud infrastructure. Google Cloud Certified Architect driven by optimizing computing latency, building dynamic distributed layers, and streamlining software operations.
+                  </p>
+                  <div className="flex flex-wrap justify-center md:justify-start gap-2.5 pt-2">
+                    <span className="bg-white/80 shadow-sm border border-gray-200/60 rounded-full px-4 py-2 text-xs font-medium flex items-center gap-2 text-gray-600"><i className="fas fa-envelope text-[#4285F4]"></i> dknaveen006@gmail.com</span>
+                    <span className="bg-white/80 shadow-sm border border-gray-200/60 rounded-full px-4 py-2 text-xs font-medium flex items-center gap-2 text-gray-600"><i className="fas fa-phone text-[#34A853]"></i> +91-8072545796</span>
+                    <a href="https://linkedin.com/in/naveen-dk" target="_blank" rel="noreferrer" className="bg-white/80 shadow-sm border border-gray-200/60 rounded-full px-4 py-2 text-xs font-medium flex items-center gap-2 text-gray-700 hover:bg-gray-50 transition"><i className="fab fa-linkedin text-[#4285F4]"></i> LinkedIn</a>
+                    <a href="https://github.com/naveen-dk" target="_blank" rel="noreferrer" className="bg-white/80 shadow-sm border border-gray-200/60 rounded-full px-4 py-2 text-xs font-medium flex items-center gap-2 text-gray-700 hover:bg-gray-50 transition"><i className="fab fa-github text-gray-900"></i> GitHub</a>
+                  </div>
+                </div>
+                
+                <div className="flex-shrink-0 relative">
+                  <div className="w-36 h-36 md:w-40 md:h-40 rounded-full p-0.5 bg-white overflow-hidden flex items-center justify-center shadow-md border border-gray-200">
+                    <img 
+                      src={imgSrc} 
+                      alt="Naveen DK Profile Image" 
+                      className="w-full h-full object-cover rounded-full transition-all duration-500 ease-in-out"
+                      onError={() => {
+                        setImgSrc("https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&auto=format&fit=crop&q=80");
+                      }}
+                    />
+                  </div>
+                </div>
+              </section>
+
+              {/* ===== TECHNICAL SKILLS MATRIX ===== */}
+              <section id="skills" className="scroll-mt-24">
+                <h2 className="text-2xl font-semibold text-gray-900 mb-6 tracking-tight">
+                  Technical Skill Set
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {skillsData.map((skill, index) => (
+                    <SkillCard key={index} icon={skill.icon} title={skill.title} items={skill.items} badgeColor={skill.badgeColor} iconColor={skill.iconColor} />
+                  ))}
+                </div>
+              </section>
+
+              {/* ===== EXPERIENCE TIMELINE ===== */}
+              <section id="experience" className="scroll-mt-24">
+                <h2 className="text-2xl font-semibold text-gray-900 mb-6 tracking-tight">
+                  Professional Experience
+                </h2>
+                <div className="space-y-4">
+                  {experienceData.map((exp, index) => (
+                    <ExpCard key={index} title={exp.title} company={exp.company} duration={exp.duration} location={exp.location} bullets={exp.bullets} sideIndicatorColor={exp.sideIndicatorColor} />
+                  ))}
+                </div>
+              </section>
+
+              {/* ===== FEATURED PROJECTS INDEX ===== */}
+              <section id="projects" className="scroll-mt-24">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">
+                    Featured Projects
+                  </h2>
+                  <span className="text-xs font-semibold bg-gray-100 text-gray-600 px-3 py-1 rounded-full border border-gray-200">
+                    {projectsData.length} Projects Total
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {projectsData.map((project, index) => (
+                    <div key={index}>
+                      <ProjectCard 
+                        title={project.title} 
+                        date={project.date} 
+                        desc={project.desc} 
+                        tags={project.tags} 
+                        link={project.link} 
+                        headerGrad={project.headerGrad} 
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* ===== GOOGLE CLOUD SHOWROOM FOR SKILL BADGES ===== */}
+              <section id="cloud-badges" className="scroll-mt-24">
+                <div className="google-dark-panel rounded-3xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                  
+                  <div className="text-center max-w-2xl mx-auto space-y-4 mb-10 relative z-10">
+                    <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-white flex items-center justify-center gap-3">
+                      <span>My Certified Skill Set</span>
+                      <a href="https://www.cloudskillsboost.google/public_profiles/4e2d36d2-64f3-4e4c-81b2-your-profile" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-blue-400 transition text-xl" title="Verify Profile">
+                        <i className="fas fa-external-link-alt text-lg"></i>
+                      </a>
+                    </h3>
+                    
+                    <div className="flex flex-wrap justify-center gap-2 pt-4">
+                      {["All", "Featured", "AI Models", "Vertex AI", "Gemini", "Security", "Prompt design"].map((pill) => (
+                        <button 
+                          key={pill}
+                          onClick={() => setActiveBadgeTab(pill)}
+                          className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${
+                            activeBadgeTab === pill 
+                              ? "bg-white text-black border-white shadow-sm" 
+                              : "bg-transparent text-gray-400 border-gray-800 hover:text-white hover:border-gray-600"
+                          }`}
+                        >
+                          {pill}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
+                    {filteredBadges.map((badge, idx) => (
+                      <a 
+                        key={idx} 
+                        href={badge.link} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="google-dark-card rounded-2xl p-5 flex flex-col justify-between group block cursor-pointer"
+                      >
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-start gap-2">
+                            <span className="mono-text text-[10px] text-blue-400 uppercase font-semibold tracking-widest bg-blue-950/40 border border-blue-900/40 px-2 py-0.5 rounded">
+                              {badge.cat}
+                            </span>
+                            <span className="text-[10px] text-gray-500 font-medium mono-text">{badge.date}</span>
+                          </div>
+                          <h4 className="font-semibold text-sm text-gray-200 group-hover:text-blue-400 transition duration-150 leading-snug">
+                            {badge.name}
+                          </h4>
+                        </div>
+                        <div className="flex justify-end pt-4">
+                          <div className="w-7 h-7 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-500 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-500 transition duration-200">
+                            <i className="fas fa-arrow-right text-[10px]"></i>
+                          </div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </section>
+
+              {/* ===== EDUCATION SUMMARY ===== */}
+              <section id="education" className="grid grid-cols-1 lg:grid-cols-12 gap-6 scroll-mt-24">
+                <div className="lg:col-span-7">
+                  <h2 className="text-2xl font-semibold text-gray-900 mb-6 tracking-tight">
+                    Education
+                  </h2>
+                  <div className="bg-white/90 rounded-2xl border border-gray-200/60 p-6 space-y-5 shadow-sm backdrop-blur-md">
+                    <div>
+                      <div className="flex justify-between items-start gap-4 flex-wrap">
+                        <h3 className="font-bold text-lg text-gray-900">B.Tech Information Technology</h3>
+                        <span className="text-xs font-semibold bg-blue-50 text-[#1a73e8] border border-blue-100/60 px-3 py-1 rounded-full uppercase tracking-wider mono-text">Expected 2027</span>
+                      </div>
+                      <p className="text-sm text-gray-500 font-medium mt-0.5">Anna University, Regional Campus, Trichy</p>
+                      <p className="text-sm font-bold text-[#1a73e8] mt-1">CGPA: 7 / 10</p>
+                      <p className="text-xs text-gray-600 mt-3 bg-gray-50/50 p-3 rounded-xl border border-gray-200/40 leading-relaxed"><strong>Core Coursework:</strong> Data Structures & Algorithms, Operating Systems, DBMS, Computer Networks, System Design</p>
+                    </div>
+                    <div className="pt-5 border-t border-gray-100">
+                      <div className="flex justify-between items-start gap-4 flex-wrap">
+                        <h3 className="font-bold text-lg text-gray-900">Diploma in Computer Engineering</h3>
+                        <span className="text-xs font-semibold bg-gray-100 text-gray-500 border border-gray-200 px-3 py-1 rounded-full uppercase tracking-wider mono-text">2024</span>
+                      </div>
+                      <p className="text-sm text-gray-500 font-medium mt-0.5">The Kavery Polytechnic College, Salem</p>
+                      <p className="text-sm font-bold text-gray-600 mt-1">Percentage: 80%</p>
+                      <p className="text-xs text-gray-600 mt-3 bg-gray-50/50 p-3 rounded-xl border border-gray-200/40 leading-relaxed"><strong>Core Foundation:</strong> Foundational programming paradigms, logical engineering metrics, database systems development</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="lg:col-span-5">
+                  <h2 className="text-2xl font-semibold text-gray-900 mb-6 tracking-tight">
+                    Certifications & Stats
+                  </h2>
+                  <div className="bg-white/90 rounded-2xl border border-gray-200/60 p-6 space-y-4 shadow-sm backdrop-blur-md">
+                    <div className="flex items-start gap-4">
+                      <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#4285F4] flex items-center justify-center flex-shrink-0 mt-0.5 border border-blue-100/60">
+                        <i className="fas fa-certificate text-sm"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-sm text-gray-900 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Google Cloud Certified</h4>
+                        <p className="text-xs text-gray-500 leading-relaxed mt-0.5">Professional Cloud Architect credential validating multi-region infrastructure architecture optimization.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4 pt-1">
+                      <div className="w-9 h-9 rounded-xl bg-red-50 text-[#EA4335] flex items-center justify-center flex-shrink-0 mt-0.5 border border-red-100/60">
+                        <i className="fas fa-terminal text-sm"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-sm text-gray-900 bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent">Competitive Programming</h4>
+                        <p className="text-xs text-gray-500 leading-relaxed mt-0.5">LeetCode Peak Rating of 1800+ with 350+ algorithms optimized. HackerRank 5-Star Python badge.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4 pt-1">
+                      <div className="w-9 h-9 rounded-xl bg-green-50 text-[#34A853] flex items-center justify-center flex-shrink-0 mt-0.5 border border-green-100/60">
+                        <i className="fas fa-users text-sm"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-sm text-gray-900 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">GDSC Technical Director</h4>
+                        <p className="text-xs text-gray-500 leading-relaxed mt-0.5">Organized and presented 5+ technical workshops on DSA algorithms and structural systems engineering.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* ===== FOOTER LINKS ===== */}
+              <section id="contact" className="bg-white rounded-2xl border border-gray-200 p-8 text-center max-w-2xl mx-auto shadow-sm">
+                <h2 className="text-2xl font-semibold text-gray-900 mb-1 tracking-tight">Let's connect</h2>
+                <p className="text-sm text-gray-500 mb-6">Available for software engineering, web application engineering, and platform building initiatives.</p>
+                <div className="flex flex-wrap justify-center gap-3 text-xs font-medium">
+                  <button onClick={() => setIsModalOpen(true)} className="bg-gray-50 hover:bg-gray-100 text-gray-800 px-5 py-2.5 rounded-full flex items-center gap-2 transition border border-gray-200/50"><i className="fas fa-envelope text-[#4285F4]"></i> Open Contact Pipeline</button>
+                  <a href="https://linkedin.com/in/naveen-dk" target="_blank" rel="noreferrer" className="bg-gray-50 hover:bg-gray-100 text-gray-800 px-5 py-2.5 rounded-full flex items-center gap-2 transition border border-gray-200/50"><i className="fab fa-linkedin text-[#1a73e8]"></i> LinkedIn</a>
+                  <a href="https://github.com/naveen-dk" target="_blank" rel="noreferrer" className="bg-gray-50 hover:bg-gray-100 text-gray-800 px-5 py-2.5 rounded-full flex items-center gap-2 transition border border-gray-200/50"><i className="fab fa-github text-gray-900"></i> GitHub</a>
+                </div>
+                <div className="mt-8 text-xs text-slate-400 border-t border-gray-100 pt-5 font-normal">
+                  © 2026 Naveen DK · Programmed cleanly following Google Material 3 Design Guidelines.
+                </div>
+              </section>
+
+            </main>
+
+            {/* ===== AUTOMATION INTERFACE MODAL ===== */}
+            {isModalOpen && (
+              <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-[100] px-4 animate-fadeIn">
+                <div className="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl border border-gray-100 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-xl font-bold tracking-tight text-gray-900">Connect & Test Pipeline</h3>
+                    <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 transition text-lg"><i className="fas fa-times"></i></button>
+                  </div>
+                  <form onSubmit={handleEmailAutomation} className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Your Name</label>
+                      <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-[#4285F4]" placeholder="Recruiter / Networker" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Your Destination Email</label>
+                      <input required type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full px-4 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-[#4285F4]" placeholder="name@company.com" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 mb-1">Message</label>
+                      <textarea required rows="3" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="w-full px-4 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-[#4285F4] resize-none" placeholder="Checked out your cloud projects..."></textarea>
+                    </div>
+                    <button disabled={isSending} type="submit" className="w-full bg-[#4285F4] text-white py-2.5 rounded-xl font-medium hover:bg-[#1a73e8] transition shadow-sm disabled:bg-gray-300">
+                      {isSending ? "Dispatching..." : "Initialize Automation"}
+                    </button>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
